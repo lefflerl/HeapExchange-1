@@ -21,16 +21,18 @@
       </div>
     </div>
   </div>
-   <div id='SubmitPost'>
-      <input type="text" size="100" id="newPost" name="newPost" placeholder="New Post">
+
+<h2 id='page'></h2>
+<div id='SubmitComment'>
+      <input type="text" size="100" id="newComment" name="newComment" placeholder="New Comment">
       <br>
-      <input id="submit" type="submit" name="upload" onclick="newPost()" value="Submit Post">
+      <input id="submit" type="submit" name="upload" onclick="newComment()" value="Submit Comment">
    </div>
-   <h1> Posts </h1>
-   <table id='main' align='center'>
-   </table>
-  
-   <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
+<table id='comments' align='center'>
+</table>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
    <script>
       // Initialize Firebase
       var config = {
@@ -44,40 +46,62 @@
 
       firebase.initializeApp(config);
    </script>
+<script>
+
+var page = getUrlVars()['id'];
+
+var postRef = firebase.database().ref('posts/'+page);
+
+postRef.once("value", function(value){
+    value.forEach(function(data){
+        var post = data.val();
+        document.getElementById("page").innerHTML = post;
+    });
+});
+
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+</script>
    <script type="text/javascript">
-      var ref = firebase.database().ref().child("posts");
-     
+      var ref = firebase.database().ref().child("posts/"+page);
+
       ref.on("child_added", function(data) {
       
-        let tab = document.getElementById("main");
-                 
-               let row = document.createElement('tr');
-               row.setAttribute("id", data.key);
-               row.setAttribute("class", 'clickable-row');
-               row.setAttribute("data-href", 'posts');
-               row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post}</td>`;
-               tab.appendChild(row);
+			let tab = document.getElementById("comments");
+			     
+			let row = document.createElement('tr');
+			row.setAttribute("id", data.key);
+			row.innerHTML = `<td id=${data.key}>${data.val().comment}</td>`;
+			if(typeof data.val().comment != 'undefined'){
+				tab.appendChild(row);
+			}
       });
       
       ref.on("child_removed", function(data) {
-        let tab = document.getElementById("main");
+        let tab = document.getElementById("comments");
       
         const whichRow = tab.querySelector("tr[id="+data.key+"]");
         tab.removeChild(whichRow);
       
       });
       
-      function newPost(){
+      function newComment(){
         var rootRef = firebase.database().ref();
-        postRef = rootRef.child("posts");
+        commentRef = rootRef.child("posts/"+page);
       
-        var post = document.getElementById("newPost").value;
+        var comment = document.getElementById("newComment").value;
       
-        var entry = {post: post}; //add user field
+        var entry = {comment: comment}; 
 
         console.log(entry);
       
-        postRef.push().set(entry);
+        commentRef.push().set(entry);
       }
       
    </script>
@@ -86,4 +110,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </body>
+
 </html>
