@@ -2,7 +2,7 @@
 
 
 <head>
-	<title>371 Semester Project</title>
+	<title>Heap Exchange</title>
  	<meta charset="utf-8">
  	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   	<link rel="stylesheet" href="stylesheet.css">
@@ -10,24 +10,24 @@
 
 <body>
   <div class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">371 Semester Project</a>
+    <a class="navbar-brand" href="index.html">Heap Exchange</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
          </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link active" href="index.html">Home <span class="sr-only">(current)</span></a>
         <a class="nav-item nav-link" href="about.html">About</a>
       </div>
     </div>
   </div>
    <div id='SubmitPost'>
-      <input type="text" size="100" id="newPost" name="newPost" placeholder="New Post">
+      <input type="text" size="50" id="newPost" name="newPost" placeholder="New Post">
       <br>
       <input id="submit" type="submit" name="upload" onclick="newPost()" value="Submit Post">
    </div>
    <h1> Posts </h1>
-   <table id='main' align='center'>
+   <table id='main' align='center' class='table'>
    </table>
   
    <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
@@ -72,12 +72,12 @@
         postRef = rootRef.child("posts");
       
         var post = document.getElementById("newPost").value;
+        document.getElementById("newPost").value = "";
       
         var entry = {post: post}; //add user field
-
-        console.log(entry);
       
         postRef.push().set(entry);
+
       }
       
    </script>
