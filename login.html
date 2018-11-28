@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Heap Exchange</title>
+    <meta charset="utf-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+
+<body class="login">
+    <h1>Heap Exchange</h1>
+
+    <p>Login to get started</p>
+    <div>
+        <input type="text" size="50" id="loginEmail" placeholder=" Email Address">
+        <input type="text" size="50" id="loginPassword" placeholder=" Password">
+        <button onclick="checkLogin()">Login</button>
+        <p>Don't have an account, click<a href="register.html"> here </a>to register</p>
+    </div>
+
+<script>
+    var uemail = "";
+    var upassword = "";
+    /*
+    var rootRef = firebase.database().ref();
+    var keyRef = firebase.database().ref(rootRef);
+    */
+    function checkLogin (onclick) {
+        uemail = document.getElementById("loginEmail").value;
+        upassword = document.getElementById("loginPassword").value;
+        firebase.auth().signInWithEmailAndPassword(uemail, upassword)
+            .catch( error => {
+                console.log(error.message);
+            });
+        
+        /*uemail = document.getElementById("loginEmail").value;
+        uemail = uemail.toLowerCase();
+        upassword = document.getElementById("loginPassword").value;
+        upassword = upassword.toLowerCase();
+        
+        keyRef.on('value', snapshot => {
+            snapshot.forEach( childSnapshot => {
+                var email = childSnapshot.val().email;
+                email = email.toLowerCase();
+                var password = childSnapshot.val().password;
+                password = password.toLowerCase();
+
+                if (!(uemail === email)){
+                    alert("Sorry that email is not found in our database")
+                }
+                
+            });
+        });*/
+
+
+    }
+</script>
+
+</body>
+
+</html>
