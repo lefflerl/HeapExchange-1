@@ -46,20 +46,21 @@
    </script>
    <script type="text/javascript">
       var ref = firebase.database().ref().child("posts");
+      var numComments = 0;
      
       ref.on("child_added", function(data) {
 
-          ref.child("posts/"+data.key).on("value", function(snapshot) {
-            console.log("There are "+snapshot.numChildren()+" posts");
+          ref.child(data.key+"/comments/").on("value", function(snapshot) {
+            numComments = snapshot.numChildren();
           })
-      
+
         let tab = document.getElementById("main");
                  
                let row = document.createElement('tr');
                row.setAttribute("id", data.key);
                row.setAttribute("class", 'clickable-row');
                row.setAttribute("data-href", 'posts');
-               row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post}</td>`;
+               row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post} <img src="Images/comment.png" id="commentImg">${numComments} </td>`;
                tab.appendChild(row);
       });
       

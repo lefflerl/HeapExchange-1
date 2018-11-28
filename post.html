@@ -74,6 +74,10 @@ function getUrlVars() {
       ref.on("child_added", function(data) {
       
 			let tab = document.getElementById("comments");
+
+			ref.child("post/"+data.key+"/comments").on("value", function(snapshot) {
+			  console.log("There are "+snapshot.numChildren()+" comments for "  + data.key);
+			})
 			     
 			let row = document.createElement('tr');
 			row.setAttribute("id", data.key);
