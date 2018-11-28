@@ -27,7 +27,7 @@
       <input id="submit" type="submit" name="upload" onclick="newPost()" value="Submit Post">
    </div>
    <h1> Posts </h1>
-   <table id='main' align='center' class='table'>
+   <table id='main' class='table' align="center">
    </table>
   
    <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
@@ -58,8 +58,6 @@
                  
                let row = document.createElement('tr');
                row.setAttribute("id", data.key);
-               row.setAttribute("class", 'clickable-row');
-               row.setAttribute("data-href", 'posts');
                row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post} <img src="Images/comment.png" id="commentImg">${numComments} </td>`;
                tab.appendChild(row);
       });
