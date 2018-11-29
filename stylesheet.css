@@ -118,3 +118,33 @@ a:visited {
 a:hover {
   color: purple;
 }
+
+/* Login Page */
+@import url('https://fonts.googleapis.com/css?family=Ultra');
+
+.login h1 {
+    font-family: 'Ultra', serif;
+}
+
+.login {
+    background-color: #868e96;
+}
+.login p {
+    text-align: center;
+}
+
+.login a {
+    color: whitesmoke;
+}
+
+.login input {
+    height: 40px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.login div {
+    margin: auto;
+    text-align: center;
+    width: 500px;
+}
