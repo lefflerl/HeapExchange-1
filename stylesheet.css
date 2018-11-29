@@ -153,9 +153,10 @@ a:hover {
     height: 40px;
     border-radius: 20px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-.login div {
+#inputs {
     margin: auto;
     text-align: center;
     width: 500px;
