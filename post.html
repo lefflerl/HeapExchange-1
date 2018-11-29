@@ -20,6 +20,14 @@
         <a class="nav-item nav-link" href="about.html">About</a>
       </div>
     </div>
+    <div class="nav navbar-nav navbar-right" id="login">
+      <a class="nav-item nav-link" href="login.html">Login</a>
+    </div>
+    <div class="nav navbar-nav navbar-right" id="logout">
+      <a class="nav-item nav-link" onclick="logout()">Logout</a>
+    </div>
+    <div id="user" class="nav navbar-nav navbar-right">
+    </div>
   </div>
 
 <h2 id='page'></h2>
@@ -28,6 +36,7 @@
       <input type="text" size="50"id="newComment" name="newComment" placeholder="New Comment">
       <br>
       <input id="submit" type="submit" name="upload" onclick="newComment()" value="Submit Comment">
+      <p id="error" class="alert alert-warning hideme"></p>
 </div>
 <table id='comments' align='center' class="table">
 </table>
@@ -78,7 +87,13 @@ function getUrlVars() {
 			     
 			let row = document.createElement('tr');
 			row.setAttribute("id", data.key);
-			row.innerHTML = `<td id=${data.key}>${data.val().comment}</td>`;
+
+			if(data.val().user){
+	        	row.innerHTML = `<td id=${data.key}>${data.val().comment} <br><br> Posted: ${data.val().date} By: ${data.val().user}</td>`;
+	        } else{
+	        	row.innerHTML = `<td id=${data.key}>${data.val().comment}</td>`;
+	        }
+
 			if(typeof data.val().comment != 'undefined'){
 				tab.appendChild(row);
 			}
@@ -93,18 +108,59 @@ function getUrlVars() {
       });
       
       function newComment(){
-        var rootRef = firebase.database().ref();
-        commentRef = rootRef.child("posts/"+page+"/comments");
-      
-        var comment = document.getElementById("newComment").value;
-        document.getElementById("newComment").value = "";
-      
-        var entry = {comment: comment}; 
 
-        console.log(entry);
-      
-        commentRef.push().set(entry);
+      	firebase.auth().onAuthStateChanged(function(user) {
+	        if (user) {
+		        var rootRef = firebase.database().ref();
+	        	commentRef = rootRef.child("posts/"+page+"/comments");
+	        
+		        var comment = document.getElementById("newComment").value;
+	        	document.getElementById("newComment").value = "";
+
+	        	var user = user.email.split("@")[0];
+
+	        	var d = new Date();
+	        	var date = getFormattedDate(d);
+	        
+	        	var entry = {comment: comment, user: user, date: date}; //add user field
+	        
+	        	commentRef.push().set(entry);
+	        } else {
+	          // No user is signed in.
+	          document.getElementById("error").classList.remove("hideme");
+	          document.getElementById("error").innerHTML = "You must be logged in to comment";
+	        }
+      });
+        
       }
+
+      function getFormattedDate(date) {
+        var year = date.getFullYear();
+
+        var month = (1 + date.getMonth()).toString();
+        month = month.length > 1 ? month : '0' + month;
+
+        var day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+
+        return month + '/' + day + '/' + year;
+      }
+
+      firebase.auth().onAuthStateChanged(function(user) {
+	      if (user) {
+	        // display email for now
+	        document.getElementById("user").innerHTML = user.email.split("@")[0];
+	        var login = document.getElementById("login");
+	        login.classList.add("hideme")
+	      } else {
+	        // No user is signed in.
+	        var logout = document.getElementById("logout");
+	        logout.classList.add("hideme")
+	        var login = document.getElementById("login");
+	        login.classList.remove("hideme")
+	        document.getElementById("user").innerHTML = "";
+	      }
+		});
       
    </script>
 
