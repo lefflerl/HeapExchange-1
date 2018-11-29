@@ -62,11 +62,9 @@ var page = getUrlVars()['id'];
 
 var postRef = firebase.database().ref('posts/'+page);
 
+var count = 0
 postRef.once("value", function(value){
-    value.forEach(function(data){
-        var post = data.val();
-        document.getElementById("page").innerHTML = post;
-    });
+    document.getElementById("page").innerHTML = value.val().post;
 });
 
 
