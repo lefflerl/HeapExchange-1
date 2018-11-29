@@ -23,6 +23,8 @@
     <div class="nav navbar-nav navbar-right">
       <a class="nav-item nav-link" href="login.html">Login</a>
     </div>
+    <div id="user" class="nav navbar-nav navbar-right">
+    </div>
   </div>
    <div id='SubmitPost'>
       <input type="text" size="50" id="newPost" name="newPost" placeholder="New Post">
@@ -85,6 +87,15 @@
         postRef.push().set(entry);
 
       }
+
+      firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // display email for now
+        document.getElementById("user").innerHTML = user.email;
+      } else {
+        // No user is signed in.
+      }
+    });
       
    </script>
 
