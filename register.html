@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Heap Exchange</title>
+    <meta charset="utf-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDIVWvVlRh45VLYILoFcARByGjMBMuNxgY",
+        authDomain: "heapexchange-d68f8.firebaseapp.com",
+        databaseURL: "https://heapexchange-d68f8.firebaseio.com",
+        projectId: "heapexchange-d68f8",
+        storageBucket: "heapexchange-d68f8.appspot.com",
+        messagingSenderId: "605368222798"
+      };
+      firebase.initializeApp(config);
+   </script>
+</head>
+
+<body class="login">
+    <h1>Heap Exchange</h1>
+
+    <p>Set up an account with us!</p>
+    <div>
+        <p>Please type in your first and last name <input type="text" size="50" id="firstName" placeholder=" First name">
+        <input type="text" size="50" id="lastName" placeholder=" Last name"></p>
+        <p>Create Email <input type="text" size="50" id="loginEmail" placeholder=" Email Address"></p>
+        <p>Create Username <input type="text" size="50" id="userName" placeholder=" Username"></p>
+        <p>Create Password <input type="password" size="50" id="loginPassword" placeholder=" New Password">
+        <input type="password" size="50" id="confirmPassword" placeholder=" Confirm Password"></p>
+        <button onclick="createAccount()">Create</button>
+    </div>
+<script>
+    var firstName = "";
+    var lastName = "";
+    var uemail = "";
+    var userName = "";
+    var upassword = "";
+    var cpassword = "";
+    var rootRef = firebase.database().ref();
+    var userRef = rootRef.child("users");
+
+    function createAccount(onclick) {
+        firstName = document.getElementById("firstName").value;
+        lastName = document.getElementById("lastName").value;
+        uemail = document.getElementById("loginEmail").value;
+        userName = document.getElementById("userName").value;
+        upassword = document.getElementById("loginPassword").value;
+        cpassword = document.getElementById("confirmPassword").value;
+        if (!(upassword === cpassword)){
+            alert("Passwords do not match, please type them in again");
+        }else{
+            firebase.auth().createUserWithEmailAndPassword(uemail, upassword)
+                .catch( error => {
+                    console.log(error.message);
+                });
+            userRef.push({firstName: firstName, lastName: lastName, email: uemail, username: userName});
+            window.location.href = "index.html";
+        }
+    }
+</script>
+
+</body>
+
+</html>
