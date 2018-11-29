@@ -20,8 +20,11 @@
         <a class="nav-item nav-link" href="about.html">About</a>
       </div>
     </div>
-    <div class="nav navbar-nav navbar-right">
+    <div class="nav navbar-nav navbar-right" id="login">
       <a class="nav-item nav-link" href="login.html">Login</a>
+    </div>
+    <div class="nav navbar-nav navbar-right" id="logout">
+      <a class="nav-item nav-link" onclick="logout()">Logout</a>
     </div>
     <div id="user" class="nav navbar-nav navbar-right">
     </div>
@@ -88,12 +91,23 @@
 
       }
 
+      function logout(){
+        firebase.auth().signOut();
+      }
+
       firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         // display email for now
-        document.getElementById("user").innerHTML = user.email;
+        document.getElementById("user").innerHTML = user.email.split("@")[0];
+        var login = document.getElementById("login");
+        login.classList.add("hideme")
       } else {
         // No user is signed in.
+        var logout = document.getElementById("logout");
+        logout.classList.add("hideme")
+        var login = document.getElementById("login");
+        login.classList.remove("hideme")
+        document.getElementById("user").innerHTML = "";
       }
     });
       

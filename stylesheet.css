@@ -32,6 +32,10 @@
   padding-top: 25px;
 }
 
+.hideme{
+  display: none;
+}
+
 #SubmitPost{
   text-align: center;
   padding-top: 20px;
@@ -62,6 +66,10 @@
 
 #user{
   color: white;
+}
+
+#login{
+  color: black;
 }
 
 
