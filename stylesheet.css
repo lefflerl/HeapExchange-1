@@ -1,7 +1,6 @@
 /* General */
 
 .table{
-  width: 50%;
   text-align: center;
 }
 
@@ -54,7 +53,6 @@
 #page{
   text-align: center;
   padding: 20px;
-  /*border: solid black 1px;*/
 }
 
 #commentImg{
@@ -70,6 +68,16 @@
 
 #login{
   color: black;
+}
+
+#newPost {
+  width: 75%;
+  margin: auto;
+}
+
+#newComment {
+  width: 75%;
+  margin: auto;
 }
 
 
@@ -103,8 +111,6 @@ th {
 
 
 td{
-  border: solid .5px;
-  border-width: 100%;
   font-size: 20px;
   width: 100%;
 }
@@ -156,7 +162,7 @@ a:hover {
     text-align: center;
 }
 
-#inputs {
+#inputs  {
     margin: auto;
     text-align: center;
     width: 500px;

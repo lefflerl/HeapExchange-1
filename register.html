@@ -43,7 +43,7 @@
         <input type="password" size="50" id="confirmPassword" placeholder=" Confirm Password">
         <p id="error" class="alert alert-warning hideme"></p>
         <p id="success" class="alert alert-success hideme"></p>
-        <button onclick="createAccount()">Create</button>
+        <button class="btn btn-secondary" onclick="createAccount()">Create!</button>
     </div>
 <script>
     var errorCheck = false;
@@ -73,7 +73,6 @@
                 document.getElementById("error").classList.add("hideme");
                 document.getElementById("success").classList.remove("hideme");
                 document.getElementById("success").innerHTML = "Success! <a id='login' href='index.html'>Go to main page</a>";
-                // userRef.push({firstName: firstName, lastName: lastName, email: uemail, username: userName});
             }
         }
 
