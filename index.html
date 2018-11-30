@@ -68,7 +68,7 @@
         let row = document.createElement('tr');
         row.setAttribute("id", data.key);
         if(data.val().user){
-        row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post} <img src="Images/comment.png" id="commentImg">${numComments} <br><br> Posted: ${data.val().date} By: ${data.val().user} </td>`;
+        row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}">${data.val().post}</a><img src="Images/comment.png" id="commentImg">${numComments} <br><br> Posted: ${data.val().date} By: ${data.val().user} </td>`;
         } else{
         row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post} <img src="Images/comment.png" id="commentImg">${numComments}</td>`;
         }
