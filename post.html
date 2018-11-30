@@ -1,50 +1,46 @@
+
+
 <!DOCTYPE html>
-
-
 <head>
-	<title>Heap Exchange</title>
- 	<meta charset="utf-8">
- 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  	<link rel="stylesheet" href="stylesheet.css">
+   <title>Heap Exchange</title>
+   <meta charset="utf-8">
+   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <link rel="stylesheet" href="stylesheet.css">
 </head>
-
 <body>
-  <div class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="index.html">Heap Exchange</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-         <span class="navbar-toggler-icon"></span>
-         </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="index.html">Home <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="about.html">About</a>
+   <div class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="index.html">Heap Exchange</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+         <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="index.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="about.html">About</a>
+         </div>
       </div>
-    </div>
-    <div class="nav navbar-nav navbar-right" id="login">
-      <a class="nav-item nav-link" href="login.html">Login</a>
-    </div>
-    <div class="nav navbar-nav navbar-right" id="logout">
-      <a class="nav-item nav-link" onclick="logout()">Logout</a>
-    </div>
-    <div id="user" class="nav navbar-nav navbar-right">
-    </div>
-  </div>
-
-<h2 id='page'></h2>
-<hr>
-<div id='SubmitComment'>
-	<textarea type="text" class="form-control" rows="5" id="newComment" name="newPost" placeholder="New Comment"></textarea>
+      <div class="nav navbar-nav navbar-right" id="login">
+         <a class="nav-item nav-link" href="login.html">Login</a>
+      </div>
+      <div class="nav navbar-nav navbar-right" id="logout">
+         <a class="nav-item nav-link" onclick="logout()">Logout</a>
+      </div>
+      <div id="user" class="nav navbar-nav navbar-right">
+      </div>
+   </div>
+   <h2 id='page'></h2>
+   <hr>
+   <div id='SubmitComment'>
+      <textarea type="text" class="form-control" rows="5" id="newComment" name="newPost" placeholder="New Comment"></textarea>
       <br>
       <input id="submit" type="submit" class="btn btn-secondary" name="upload" onclick="newComment()" value="Submit Comment">
       <p id="error" class="alert alert-warning hideme"></p>
-</div>
-<table class='table table-striped table-hover' align="center">
-    <tbody id='comments'>
-    </tbody>
-</table>
-
-
-<script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
+   </div>
+   <table class='table table-striped table-hover' align="center">
+      <tbody id='comments'>
+      </tbody>
+   </table>
+   <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
    <script>
       // Initialize Firebase
       var config = {
@@ -55,48 +51,47 @@
         storageBucket: "heapexchange-d68f8.appspot.com",
         messagingSenderId: "605368222798"
       };
-
+      
       firebase.initializeApp(config);
    </script>
-<script>
-
-var page = getUrlVars()['id'];
-
-var postRef = firebase.database().ref('posts/'+page);
-
-var count = 0
-postRef.once("value", function(value){
-    document.getElementById("page").innerHTML = value.val().post;
-});
-
-
-function getUrlVars() {
-    var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-        vars[key] = value;
-    });
-    return vars;
-}
-</script>
+   <script>
+      var page = getUrlVars()['id'];
+      
+      var postRef = firebase.database().ref('posts/'+page);
+      
+      var count = 0
+      postRef.once("value", function(value){
+          document.getElementById("page").innerHTML = value.val().post;
+      });
+      
+      
+      function getUrlVars() {
+          var vars = {};
+          var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+              vars[key] = value;
+          });
+          return vars;
+      }
+   </script>
    <script type="text/javascript">
       var ref = firebase.database().ref().child("posts/"+page+"/comments");
-
+      
       ref.on("child_added", function(data) {
       
-			let tab = document.getElementById("comments");
-			     
-			let row = document.createElement('tr');
-			row.setAttribute("id", data.key);
-
-			if(data.val().user){
-	        	row.innerHTML = `<td id=${data.key}>${data.val().comment} <br><br> Posted: ${data.val().date} By: ${data.val().user}</td>`;
-	        } else{
-	        	row.innerHTML = `<td id=${data.key}>${data.val().comment}</td>`;
-	        }
-
-			if(typeof data.val().comment != 'undefined'){
-				tab.appendChild(row);
-			}
+      let tab = document.getElementById("comments");
+        
+      let row = document.createElement('tr');
+      row.setAttribute("id", data.key);
+      
+      if(data.val().user){
+         	row.innerHTML = `<td id=${data.key}>${data.val().comment} <br><br> Posted: ${data.val().date} By: ${data.val().user}</td>`;
+         } else{
+         	row.innerHTML = `<td id=${data.key}>${data.val().comment}</td>`;
+         }
+      
+      if(typeof data.val().comment != 'undefined'){
+      tab.appendChild(row);
+      }
       });
       
       ref.on("child_removed", function(data) {
@@ -108,65 +103,64 @@ function getUrlVars() {
       });
       
       function newComment(){
-
+      
       	firebase.auth().onAuthStateChanged(function(user) {
-	        if (user) {
-		        var rootRef = firebase.database().ref();
-	        	commentRef = rootRef.child("posts/"+page+"/comments");
-	        
-		        var comment = document.getElementById("newComment").value;
-	        	document.getElementById("newComment").value = "";
-
-	        	var user = user.email.split("@")[0];
-
-	        	var d = new Date();
-	        	var date = getFormattedDate(d);
-	        
-	        	var entry = {comment: comment, user: user, date: date}; //add user field
-	        
-	        	commentRef.push().set(entry);
-	        } else {
-	          // No user is signed in.
-	          document.getElementById("error").classList.remove("hideme");
-	          document.getElementById("error").innerHTML = "You must be logged in to comment";
-	        }
+         if (user) {
+          var rootRef = firebase.database().ref();
+         	commentRef = rootRef.child("posts/"+page+"/comments");
+         
+          var comment = document.getElementById("newComment").value;
+         	document.getElementById("newComment").value = "";
+      
+         	var user = user.email.split("@")[0];
+      
+         	var d = new Date();
+         	var date = getFormattedDate(d);
+         
+         	var entry = {comment: comment, user: user, date: date}; //add user field
+         
+         	commentRef.push().set(entry);
+         } else {
+           // No user is signed in.
+           document.getElementById("error").classList.remove("hideme");
+           document.getElementById("error").innerHTML = "You must be logged in to comment";
+         }
       });
         
       }
-
+      
       function getFormattedDate(date) {
         var year = date.getFullYear();
-
+      
         var month = (1 + date.getMonth()).toString();
         month = month.length > 1 ? month : '0' + month;
-
+      
         var day = date.getDate().toString();
         day = day.length > 1 ? day : '0' + day;
-
+      
         return month + '/' + day + '/' + year;
       }
-
+      
       firebase.auth().onAuthStateChanged(function(user) {
-	      if (user) {
-	        // display email for now
-	        document.getElementById("user").innerHTML = user.email.split("@")[0];
-	        var login = document.getElementById("login");
-	        login.classList.add("hideme")
-	      } else {
-	        // No user is signed in.
-	        var logout = document.getElementById("logout");
-	        logout.classList.add("hideme")
-	        var login = document.getElementById("login");
-	        login.classList.remove("hideme")
-	        document.getElementById("user").innerHTML = "";
-	      }
-		});
+       if (user) {
+         // display email for now
+         document.getElementById("user").innerHTML = user.email.split("@")[0];
+         var login = document.getElementById("login");
+         login.classList.add("hideme")
+       } else {
+         // No user is signed in.
+         var logout = document.getElementById("logout");
+         logout.classList.add("hideme")
+         var login = document.getElementById("login");
+         login.classList.remove("hideme")
+         document.getElementById("user").innerHTML = "";
+       }
+      });
       
    </script>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </body>
-
 </html>
+
