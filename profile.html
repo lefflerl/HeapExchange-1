@@ -80,7 +80,7 @@
         let row = document.createElement('tr');
         row.setAttribute("id", data.key);
         if(data.val().user){
-        row.innerHTML = `<td id=${data.key}>${data.val().post} <br><br> <span style="font-size: 14">Posted: ${data.val().date} By: ${data.val().user} </span></td>`;
+        row.innerHTML = `<td id=${data.key}>${data.val().post} <br><br> Posted: ${data.val().date} By:  <a href="profile.html?id=${data.val().uid}&un=${data.val().user}">${data.val().user}</td>`;
         } else{
         row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post} <img src="Images/comment.png" id="commentImg">${numComments}</td>`;
         }

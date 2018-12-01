@@ -84,7 +84,7 @@
       row.setAttribute("id", data.key);
       
       if(data.val().user){
-         	row.innerHTML = `<td id=${data.key}>${data.val().comment} <br><br> Posted: ${data.val().date} By: ${data.val().user}</td>`;
+         	row.innerHTML = `<td id=${data.key}>${data.val().comment} <br><br> Posted: ${data.val().date} By: <a href="profile.html?id=${data.val().uid}&un=${data.val().user}"> ${data.val().user}</td>`;
          } else{
          	row.innerHTML = `<td id=${data.key}>${data.val().comment}</td>`;
          }
@@ -106,6 +106,7 @@
       
       	firebase.auth().onAuthStateChanged(function(user) {
          if (user) {
+          var id = getUrlVars()['id']; 
           var rootRef = firebase.database().ref();
          	commentRef = rootRef.child("posts/"+page+"/comments");
          
@@ -117,7 +118,7 @@
          	var d = new Date();
          	var date = getFormattedDate(d);
          
-         	var entry = {comment: comment, user: user, date: date}; //add user field
+         	var entry = {comment: comment, user: user, date: date, uid: id}; //add user field
          
          	commentRef.push().set(entry);
          } else {
