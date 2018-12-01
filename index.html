@@ -23,7 +23,7 @@
          <a class="nav-item nav-link" href="login.html">Login</a>
       </div>
       <div class="nav navbar-nav navbar-right hideme" id="logout">
-         <a class="nav-item nav-link" onclick="logout()">Logout</a>
+         <a class="nav-item nav-link" onclick="logout()" href='index.html'>Logout</a>
       </div>
       <div id="user" class="nav navbar-nav navbar-right">
       </div>
@@ -68,7 +68,7 @@
         let row = document.createElement('tr');
         row.setAttribute("id", data.key);
         if(data.val().user){
-        row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}">${data.val().post}</a><img src="Images/comment.png" id="commentImg">${numComments} <br><br> Posted: ${data.val().date} By: ${data.val().user} </td>`;
+        row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}">${data.val().post}</a><img src="Images/comment.png" id="commentImg">${numComments} <br><br> <span style="font-size: 14">Posted: ${data.val().date} By: <a href="profile.html?id=${data.val().uid}&un=${data.val().user}">${data.val().user}</a> </span></td>`;
         } else{
         row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post} <img src="Images/comment.png" id="commentImg">${numComments}</td>`;
         }
@@ -94,12 +94,13 @@
           var post = document.getElementById("newPost").value;
           document.getElementById("newPost").value = "";
       
+          var uid = user.uid;
           var user = user.email.split("@")[0];
-      
+
           var d = new Date();
           var date = getFormattedDate(d);
         
-          var entry = {post: post, user: user, date: date}; //add user field
+          var entry = {post: post, user: user, date: date, uid: uid}; //add user field
         
           postRef.push().set(entry);
         } else {
@@ -129,8 +130,7 @@
       
       firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        // display email for now
-        document.getElementById("user").innerHTML = user.email.split("@")[0];
+        document.getElementById("user").innerHTML = "<a href='profile.html?id="+user.uid+"&un="+user.email.split("@")[0]+"'</a>" + user.email.split("@")[0];
         var login = document.getElementById("login");
         login.classList.add("hideme")
         var logout = document.getElementById("logout");
