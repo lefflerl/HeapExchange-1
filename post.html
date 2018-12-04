@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <head>
    <title>Heap Exchange</title>
@@ -79,6 +77,16 @@
       ref.on("child_added", function(data) {
       
       let tab = document.getElementById("comments");
+
+      let editBtn = document.createElement('button');
+      editBtn.innerHTML = "Edit";
+      editBtn.class = "btn btn-secondary";
+        
+      let delBtn = document.createElement('button');
+      delBtn.innerHTML = "Delete";
+      delBtn.class = "btn btn-secondary";
+
+      let td = document.createElement('td');
         
       let row = document.createElement('tr');
       row.setAttribute("id", data.key);
@@ -88,8 +96,26 @@
          } else{
          	row.innerHTML = `<td id=${data.key}>${data.val().comment}</td>`;
          }
-      
+
       if(typeof data.val().comment != 'undefined'){
+       
+         firebase.auth().onAuthStateChanged(function(user) {
+            if(user) {
+                // Links the comment to the user. 
+                if(data.val().user === user.email.split("@")[0]){
+                    td.appendChild(editBtn);
+                    td.appendChild(delBtn);
+                    row.appendChild(td);
+                    
+                    editBtn.addEventListener("click", function() {edit(data.key)});
+                    delBtn.addEventListener("click", function() {deletePost(data.key)})
+                } else {
+                    row.appendChild(td);
+                }
+            }
+        })
+      
+      
       tab.appendChild(row);
       }
       });
@@ -127,7 +153,39 @@
            document.getElementById("error").innerHTML = "You must be logged in to comment";
          }
       });
-        
+
+    }
+
+      // Edits the comment. Argument passed is the data.key.
+      function edit(val){
+        let editComment = ""
+        commRef = ref.child(val)
+            commRef.once("value", function(data){
+                editComment = prompt("Edit the post", data.val().comment);
+                // Checks the propmt to see if the user entered a empty string, some text, or just clicked cancel. Prevents undefined from appearing. 
+                if (editComment === ""){
+                    commRef.update({ comment: data.val().comment })
+                } else if (editComment !== null){
+                    commRef.update({ comment: editComment })
+                } else {
+                    commRef.update({ comment: data.val().comment })
+                }
+            })
+      }
+
+      // Updates the html table in real time when the comment is edited.
+      ref.on("child_changed", function(data) {
+        let tab = document.getElementById("comments");
+      
+        let whichtd = tab.querySelector("td[id="+data.key+"]");
+                                
+        var commChanged = data.val().comment;
+        whichtd.innerHTML = `${data.val().comment} <br><br> Posted: ${data.val().date} By: <a href="profile.html?id=${data.val().uid}&un=${data.val().user}"> ${data.val().user}`;
+        })
+
+      // Deletes the comment.
+      function deletePost(val){
+          ref.child(val).remove();
       }
       
       function getFormattedDate(date) {
@@ -165,4 +223,3 @@
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </body>
 </html>
-
