@@ -54,7 +54,7 @@
    <script type="text/javascript">
       var ref = firebase.database().ref().child("posts");
       var numComments = 0;
-
+      
       ref.on("child_added", function(data) {
       
         ref.child(data.key+"/comments/").on("value", function(snapshot) {
@@ -65,15 +65,17 @@
 
         let editBtn = document.createElement('button');
         editBtn.innerHTML = "Edit";
-
+        editBtn.class = "btn btn-secondary";
+        
         let delBtn = document.createElement('button');
         delBtn.innerHTML = "Delete";
-                
+        delBtn.class = "btn btn-secondary";
+                        
         let td = document.createElement('td');
                  
         let row = document.createElement('tr');
         row.setAttribute("id", data.key);
-        console.log(data.val().uid)
+
         if(data.val().user){
         row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}">${data.val().post}</a><img src="Images/comment.png" id="commentImg">${numComments} <br><br> <span style="font-size: 14">Posted: ${data.val().date} By: <a href="profile.html?id=${data.val().uid}&un=${data.val().user}">${data.val().user}</a> </span></td>`;
         } else{
@@ -87,6 +89,7 @@
                     td.appendChild(editBtn);
                     td.appendChild(delBtn);
                     row.appendChild(td);
+                    
                     editBtn.addEventListener("click", function() {edit(data.key)});
                     delBtn.addEventListener("click", function() {deletePost(data.key)})
                 } else {
@@ -133,12 +136,32 @@
       
       }
 
-      // Edits the post.
+      // Edits the post. Argument passed is the data.key.
       function edit(val){
-            var editPost = prompt("Edit the post", "Post text");
-            postRef = ref.child(val)
-            postRef.update({ post: editPost })
-        } 
+        let editPost = ""
+        postRef = ref.child(val)
+            postRef.once("value", function(data){
+                editPost = prompt("Edit the post", data.val().post);
+                // Checks the propmt to see if the user entered a empty string, some text, or just clicked cancel. Prevents undefined from appearing. 
+                if (editPost === ""){
+                    postRef.update({ post: data.val().post })
+                } else if (editPost !== null){
+                    postRef.update({ post: editPost })
+                } else {
+                    postRef.update({ post: data.val().post })
+                }
+            })
+      }
+
+      // Updates the html table in real time when the post is edited.
+      ref.on("child_changed", function(data) {
+        let tab = document.getElementById("main");
+      
+        let whichtd = tab.querySelector("td[id="+data.key+"]");
+                                
+        var postChanged = data.val().post;
+        whichtd.innerHTML = `<a href="post.html?id=${data.key}">${postChanged}</a><img src="Images/comment.png" id="commentImg">${numComments} <br><br> <span style="font-size: 14">Posted: ${data.val().date} By: <a href="profile.html?id=${data.val().uid}&un=${data.val().user}">${data.val().user}</a> </span>`
+        })
       
       // Deletes the post.
       function deletePost(val){
