@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <head>
    <title>Heap Exchange</title>
@@ -55,12 +53,9 @@
       firebase.initializeApp(config);
    </script>
    <script type="text/javascript">
-
       var id = getUrlVars()['id'];  
       var userName = getUrlVars()['un'];  
-
       document.getElementById("profile").innerHTML = "Profile of " + userName;
-
       var ref = firebase.database().ref().child("profiles/"+id);
       var numComments = 0;
       var user;
@@ -72,10 +67,19 @@
           });
           return vars;
       }
-
       ref.on("child_added", function(data) {
       
         let tab = document.getElementById("main");
+
+        let editBtn = document.createElement('button');
+        editBtn.innerHTML = "Edit";
+        editBtn.class = "btn btn-secondary";
+        
+        let delBtn = document.createElement('button');
+        delBtn.innerHTML = "Delete";
+        delBtn.class = "btn btn-secondary";
+                        
+        let td = document.createElement('td');
                  
         let row = document.createElement('tr');
         row.setAttribute("id", data.key);
@@ -84,6 +88,22 @@
         } else{
         row.innerHTML = `<td id=${data.key}><a href="post.html?id=${data.key}"${data.val().post}</a>${data.val().post} <img src="Images/comment.png" id="commentImg">${numComments}</td>`;
         }
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if(user) {
+                // Links the post to the user who posted it. 
+                if(data.val().user === user.email.split("@")[0]){
+                    td.appendChild(editBtn);
+                    td.appendChild(delBtn);
+                    row.appendChild(td);
+                    
+                    editBtn.addEventListener("click", function() {edit(data.key)});
+                    delBtn.addEventListener("click", function() {deletePost(data.key)})
+                } else {
+                    row.appendChild(td);
+                }
+            }
+        })
       
         tab.appendChild(row);
       });
@@ -124,6 +144,38 @@
       
       }
       
+      // Edits the post. Argument passed is the data.key.
+      function edit(val){
+        let editPost = ""
+        postRef = ref.child(val)
+            postRef.once("value", function(data){
+                editPost = prompt("Edit the post", data.val().post);
+                // Checks the propmt to see if the user entered a empty string, some text, or just clicked cancel. Prevents undefined from appearing. 
+                if (editPost === ""){
+                    postRef.update({ post: data.val().post })
+                } else if (editPost !== null){
+                    postRef.update({ post: editPost })
+                } else {
+                    postRef.update({ post: data.val().post })
+                }
+            })
+      }
+
+      // Updates the html table in real time when the post is edited.
+      ref.on("child_changed", function(data) {
+        let tab = document.getElementById("main");
+      
+        let whichtd = tab.querySelector("td[id="+data.key+"]");
+                                
+        var postChanged = data.val().post;
+        whichtd.innerHTML = `<a href="post.html?id=${data.key}">${postChanged}</a><img src="Images/comment.png" id="commentImg">${numComments} <br><br> <span style="font-size: 14">Posted: ${data.val().date} By: <a href="profile.html?id=${data.val().uid}&un=${data.val().user}">${data.val().user}</a> </span>`
+        })
+      
+      // Deletes the post.
+      function deletePost(val){
+          ref.child(val).remove();
+      }
+
       function getFormattedDate(date) {
         var year = date.getFullYear();
       
@@ -163,4 +215,3 @@
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </body>
 </html>
-
